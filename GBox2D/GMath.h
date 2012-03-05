@@ -77,3 +77,19 @@ inline float gFloatRand(float min, float max)
     float r = (float)rand() / (float)RAND_MAX;
     return (max-min) * r + min;
 }
+
+/**
+ * Ranged random value
+ * @param min minimum
+ * @param max maximum
+ * @result random number between min and max
+ */
+inline int gRangeRand(float min, float max)
+{
+    if(min > max)
+    {
+        swap(min, max);
+    }
+    float r = (float)rand() / (float)RAND_MAX;
+    return (max-min) * r + min;
+}
