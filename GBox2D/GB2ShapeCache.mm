@@ -238,8 +238,15 @@ public:
                 
                 NSDictionary *circleData = [fixtureData objectForKey:@"circle"];
                 
+                float radius = [[circleData objectForKey:@"radius"] floatValue];
+/*
+                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                    radius = radius * 2.0f; //ratio for iPad //was 2.4f by calculation 768/320
+                }
+*/
+                
                 b2CircleShape *circleShape = new b2CircleShape();
-                circleShape->m_radius = [[circleData objectForKey:@"radius"] floatValue]  / ptmRatio_;
+                circleShape->m_radius = radius / ptmRatio_;
                 CGPoint p = CGPointFromString_([circleData objectForKey:@"position"]);
                 circleShape->m_p = b2Vec2(p.x / ptmRatio_, p.y / ptmRatio_);
                 fix->fixture.shape = circleShape;

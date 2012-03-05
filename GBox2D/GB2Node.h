@@ -38,11 +38,33 @@
     int objectTag;      //!< tag might be used to query an object
     CCNode *ccNode;     //!< reference to the ccNode, retained
     bool deleteLater;   //!< flag to delete the object on update phase
+    bool activeLater;   //!< flag to setActive the object on update phase
+    bool inActiveLater;   //!< flag to setInActive the object on update phase
+    bool transformLater;   //!< flag to setInActive the object on update phase
+    float transformToXLater, transformToYLater, transformToAngleLater;
 @protected
 }
 
 @property (nonatomic, retain) CCNode *ccNode;
 @property (nonatomic, assign) bool deleteLater;
+@property (nonatomic, assign) bool activeLater;
+@property (nonatomic, assign) bool inActiveLater;
+@property (nonatomic, assign) bool transformLater;
+@property (nonatomic, assign) float transformToXLater;
+@property (nonatomic, assign) float transformToYLater;
+@property (nonatomic, assign) float transformToAngleLater;
+
+//MY OWN METHODS
+
+
+-(b2Body*)body;
+
+
+//END MY OWN METHODS
+
+
+
+
 
 /**
  * Inits the object with a CCNode but no physics object
@@ -153,6 +175,7 @@
  * and rotation from the physics coordinates 
  */
 -(void) updateCCFromPhysics;
+-(void) updatePhysicsFromCC;
 
 /**
  * Replaces the current fixtures with the new shape

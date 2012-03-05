@@ -110,6 +110,10 @@ class GB2WorldContactListener;
  */
 - (void) iterateObjectsWithBlock:(GB2NodeCallBack)callback;
 
+
+-(void)startUpdatePhysics;
+-(void)stopUpdatePhysics;
+
 @end
 
 

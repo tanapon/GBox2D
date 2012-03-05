@@ -33,6 +33,24 @@
 
 @synthesize ccNode;
 @synthesize deleteLater;
+@synthesize activeLater;
+@synthesize inActiveLater;
+@synthesize transformLater;
+@synthesize transformToXLater;
+@synthesize transformToYLater;
+@synthesize transformToAngleLater;
+
+
+//MY OWN METHODS
+
+
+-(b2Body*)body
+{
+    return body;
+}
+
+
+//END MY OWN METHODS
 
 -(id) initWithShape:(NSString *)shape bodyType:(b2BodyType)bodyType node:(CCNode*)node;
 {
@@ -66,8 +84,8 @@
 
 -(void) addEdgeFrom:(b2Vec2)start to:(b2Vec2)end
 {
-    b2PolygonShape edgeShape;
-    edgeShape.SetAsEdge(start, end);
+    b2EdgeShape edgeShape;
+    edgeShape.Set(start, end);
     body->CreateFixture(&edgeShape,0);
 }
 
@@ -359,6 +377,14 @@
     b2Vec2 position = body->GetPosition();
     ccNode.position = CGPointMake(PTM_RATIO*position.x, PTM_RATIO*position.y);
     ccNode.rotation = -1 * CC_RADIANS_TO_DEGREES(body->GetAngle());
+}
+
+-(void)updatePhysicsFromCC
+{
+    b2Vec2 b2Position = b2Vec2(ccNode.position.x/PTM_RATIO,
+                               ccNode.position.y/PTM_RATIO);
+    float32 b2Angle = -1 * CC_DEGREES_TO_RADIANS(ccNode.rotation);
+    body->SetTransform(b2Position, b2Angle);
 }
 
 -(void) setFixedRotation:(bool)fixedRotation

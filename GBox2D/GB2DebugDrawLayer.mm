@@ -38,48 +38,52 @@
         world = [GB2Engine sharedInstance].world;
 
         // Enable debug draw
-        debugDraw = new GLESDebugDraw( PTM_RATIO * [[CCDirector sharedDirector] contentScaleFactor]);
+        debugDraw = new GLESDebugDraw( PTM_RATIO );
         world->SetDebugDraw(debugDraw);
         
-        // Set the flags
         uint32 flags = 0;
-        flags += b2DebugDraw::e_shapeBit;
-        // flags += b2DebugDraw::e_aabbBit;
-        flags += b2DebugDraw::e_centerOfMassBit;
+        flags += b2Draw::e_shapeBit;
+        		flags += b2Draw::e_jointBit;
+        		flags += b2Draw::e_aabbBit;
+        		flags += b2Draw::e_pairBit;
+        		flags += b2Draw::e_centerOfMassBit;
         
         debugDraw->SetFlags(flags);            
     }
     return self;
 }
 
+-(void) draw
+{
+	//
+	// IMPORTANT:
+	// This is only for debug purposes
+	// It is recommend to disable it
+	//
+	[super draw];
+	
+	ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
+	
+	kmGLPushMatrix();
+	
+	world->DrawDebugData();	
+	
+	kmGLPopMatrix();
+}
+
 -(void)dealloc
 {
     // remove debug draw from the world
-    world->SetDebugDraw(0);
+    //world->SetDebugDraw(0);
     
     // delete debug draw
     delete debugDraw;
+	debugDraw = NULL;
     
     // dealloc super objects
     [super dealloc];
 }
 
--(void) draw
-{
-    [super draw];
-    
-    // store render state
-	glDisable(GL_TEXTURE_2D);
-	glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-    // draw the world stuff
-	world->DrawDebugData();
-    
-    // restore render state
-	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
-}
+
 
 @end

@@ -59,9 +59,12 @@ float PTM_RATIO = 32.0f;
     if(self)
     {
         // set default gravity
-        b2Vec2 gravity(0.0f, -10.0f);
-        bool doSleep = true;    
-        world = new b2World(gravity, doSleep);
+        b2Vec2 gravity(0.0f, 0.0f);
+        bool doSleep = false;    
+        world = new b2World(gravity);
+        world->SetAllowSleeping(doSleep);
+        
+        world->SetContinuousPhysics(true);
         
         // get ptmRatio from GB2ShapeCache
         if(GB2_HIGHRES_PHYSICS_SHAPES)
@@ -78,9 +81,19 @@ float PTM_RATIO = 32.0f;
         world->SetContactListener(worldContactListener);    
         
         // schedule update
-        [[CCScheduler sharedScheduler] scheduleUpdateForTarget:self priority:0 paused:NO];
+        //[[[CCDirector sharedDirector] scheduler] scheduleUpdateForTarget:self priority:0 paused:NO];
     }
     return self;
+}
+
+-(void)startUpdatePhysics
+{
+    [[[CCDirector sharedDirector] scheduler] scheduleUpdateForTarget:self priority:0 paused:NO];
+}
+
+-(void)stopUpdatePhysics
+{
+    [[[CCDirector sharedDirector] scheduler] unscheduleAllSelectorsForTarget:self];
 }
 
 - (void)deleteAllObjects
@@ -116,8 +129,7 @@ float PTM_RATIO = 32.0f;
     worldContactListener = NULL;
 }
 
-
-- (void)update:(ccTime)dt 
+-(void)update:(ccTime)dt
 {            
     const float32 timeStep = 1.0f / 30.0f;
     const int32 velocityIterations = 5;
@@ -129,11 +141,26 @@ float PTM_RATIO = 32.0f;
     [self iterateObjectsWithBlock:^(GB2Node *o) {
         // update position, rotation
         [o updateCCFromPhysics];
+        //[o updatePhysicsFromCC];
         
         if(o.deleteLater)
         {
             // destroys the body and removes the object from the scene
             [o deleteNow];
+        }
+        if(o.activeLater)
+        {
+            o.activeLater = false;
+            [o body]->SetActive(true);
+        }
+        if(o.inActiveLater)
+        {
+            o.inActiveLater = false;
+            [o body]->SetActive(false);
+        }
+        if (o.transformLater) {
+            o.transformLater = false;
+            [o body]->SetTransform(b2Vec2(o.transformToXLater, o.transformToYLater), o.transformToAngleLater);
         }
     }];
 }

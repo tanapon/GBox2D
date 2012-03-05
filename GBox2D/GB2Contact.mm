@@ -31,6 +31,7 @@
 
 @implementation GB2Contact
 
+@synthesize ownObject;
 @synthesize otherObject;
 @synthesize ownFixture;
 @synthesize otherFixture;
@@ -41,6 +42,7 @@
     self = [super init];
     if(self)
     {
+        ownObject = [myOwnObject retain];
         otherObject = [theOtherObject retain];
         ownFixture = myOwnFixture;
         otherFixture = theOtherFixture;
@@ -61,6 +63,7 @@
 
 -(void) dealloc
 {
+    [ownObject release];
     [otherObject release];
     [super dealloc];
 }
