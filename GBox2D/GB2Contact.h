@@ -46,13 +46,11 @@
 {
     @private
     b2Fixture *ownFixture;   /**< the fixture that collided */
-    GB2Node *ownObject;    /**< the other object */
     GB2Node *otherObject;    /**< the other object */
     b2Fixture *otherFixture; /**< the other object's fixture that collided */
     b2Contact *box2dContact; /**< the box2d contact structure */
 }
 
-@property (nonatomic, retain) GB2Node *ownObject;
 @property (nonatomic, retain) GB2Node *otherObject;
 @property b2Fixture *ownFixture;
 @property b2Fixture *otherFixture;
